@@ -1,0 +1,78 @@
+<meta charset="UTF-8">
+<div id="app">
+
+    <table class="blueTable">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="user in users" :key="user.id">
+            <td>{{user.name}}</td>
+            <td>{{user.id}}</td>
+            <td>
+                <button class="button" @click="deleteUser(user.id)">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <div>
+        <form name="form">
+            <input type="text" placeholder="Name" v-model="name" size="60"/><br/>
+            <input type="button" value="Save" @click="createUser"/><br/>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+
+
+new Vue({
+    el: "#app",
+    data() {
+        return {
+            name: '',
+            users: []
+        }
+    },
+    methods: {
+
+        deleteUser: function(id) {
+
+                axios.delete("/persons/"+id)
+                .then(response => {
+                    this.listUsers()
+                })
+        },
+
+        createUser: function() {
+
+          var user = {
+                name: this.name
+              };
+
+            this.name = ''
+            axios.post("/persons", user).then(response => {
+                    this.listUsers()
+                })
+
+        },
+        listUsers: function() {
+            axios.get("/persons")
+                .then(response => {
+                    this.users = response.data
+                })
+        }
+    },
+    mounted: function() {
+       this.listUsers()
+    }
+})
+
+</script>
