@@ -1,18 +1,16 @@
-name: Java CI
+name: Build mycv Project
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
 
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Cache Maven Repository
+    - name: Use Cache For Maven Repository
       uses: actions/cache@v1
       with:
         path: ~/.m2
