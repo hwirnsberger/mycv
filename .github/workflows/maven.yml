@@ -23,3 +23,9 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Create and push image
+      run: |
+        docker build -f src/main/docker/Dockerfile.jvm -t docker.pkg.github.com/hwirnsberger/mycv/mycv:latest .
+        docker login -u hwirnsberger -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
+        docker push docker.pkg.github.com/hwirnsberger/mycv/mycv:latest
