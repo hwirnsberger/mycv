@@ -1,0 +1,63 @@
+name: Build mycv Project
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+env:
+  IMAGE_NAME: mycv
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Use Cache For Maven Repository
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: maven-cache-${{ hashFiles('**/pom.xml') }}
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Create and push image
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker build -f src/main/docker/Dockerfile.jvm -t $IMAGE_ID:$VERSION .
+
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+          docker push $IMAGE_ID:$VERSION
+
+      - name: Deploy to Kubernetes
+          uses: WyriHaximus/github-action-helm3@v1
+          with:
+            exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug -n mycv mycv helm/mycv
+            kubeconfig: '${{ secrets.KUBECONFIG }}'
