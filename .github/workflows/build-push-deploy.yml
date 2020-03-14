@@ -1,4 +1,4 @@
-name: Build mycv Project
+name: Build and deploy project
 
 on:
   push:

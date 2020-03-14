@@ -1,4 +1,4 @@
-name: Build mycv Project
+name: Create Base Image
 
 on:
   push:
