@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/main/docker/Dockerfile.base'
       - 'pom.xml'
+      - '.github/workflows/create-base.image.yml'
     branches:
       - master
 
