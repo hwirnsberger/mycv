@@ -11,6 +11,8 @@ spec:
       {{- include "mycv.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        github.action.build: "{{ .Values.githubActionRun }}"
       labels:
         {{- include "mycv.selectorLabels" . | nindent 8 }}
     spec:

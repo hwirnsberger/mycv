@@ -11,6 +11,7 @@ on:
       - v*
 env:
   IMAGE_NAME: mycv
+  GITHUB_WORKFLOW_URL: https://github:com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
 
 jobs:
   build:
@@ -59,5 +60,5 @@ jobs:
       - name: Deploy to Kubernetes
         uses: WyriHaximus/github-action-helm3@v1.0.0
         with:
-          exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug -n mycv mycv helm/mycv
+          exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID -n mycv mycv helm/mycv
           kubeconfig: '${{ secrets.KUBECONFIG }}'
