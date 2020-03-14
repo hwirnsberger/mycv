@@ -3,6 +3,9 @@ name: Build mycv Project
 on:
   push:
     # Publish `master` as Docker `latest` image.
+    paths:
+      - 'src/main/docker/Dockerfile.base'
+      - 'pom.xml'
     branches:
       - master
 
@@ -10,7 +13,7 @@ on:
     tags:
       - v*
 env:
-  IMAGE_NAME: mycv
+  IMAGE_NAME: mycv-base
 
 jobs:
   build:
@@ -52,12 +55,6 @@ jobs:
 
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-          docker build -f src/main/docker/Dockerfile -t $IMAGE_ID:$VERSION .
+          docker build -f src/main/docker/Dockerfile.base -t $IMAGE_ID:$VERSION .
 
           docker push $IMAGE_ID:$VERSION
-
-      - name: Deploy to Kubernetes
-        uses: WyriHaximus/github-action-helm3@v1.0.0
-        with:
-          exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug -n mycv mycv helm/mycv
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
