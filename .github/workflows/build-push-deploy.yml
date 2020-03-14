@@ -57,7 +57,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
 
       - name: Deploy to Kubernetes
-          uses: WyriHaximus/github-action-helm3@v1
-          with:
-            exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug -n mycv mycv helm/mycv
-            kubeconfig: '${{ secrets.KUBECONFIG }}'
+        uses: WyriHaximus/github-action-helm3@v1
+        with:
+          exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug -n mycv mycv helm/mycv
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
