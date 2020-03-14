@@ -35,7 +35,7 @@ jobs:
           java-version: 11
 
       - name: Build with Maven
-        run: mvn -B quarkus:build --file pom.xml
+        run: mvn -B package --file pom.xml
 
       - name: Create and push image
         run: |
