@@ -62,7 +62,7 @@ jobs:
         with:
           exec: |
             helm dependency update helm/mycv
-            helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID,service.nodePort=33000 -n mycv-test mycv helm/mycv
+            helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID,service.nodePort=31999 -n mycv-test mycv helm/mycv
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Test with Maven
