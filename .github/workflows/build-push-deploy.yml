@@ -68,7 +68,7 @@ jobs:
       - name: Test with Maven
         run: |
           echo "first"
-          echo ${{ secrets.KUBECONFIG }} > kubeconfig
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
           echo "second"
           export NODE_PORT=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[0].nodePort}" services mycv)
           echo "third"
