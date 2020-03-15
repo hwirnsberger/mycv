@@ -67,14 +67,10 @@ jobs:
 
       - name: Test with Maven
         run: |
-          echo "first"
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          echo "second"
           export NODE_PORT=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[0].nodePort}" services mycv)
-          echo "third"
           export NODE_IP=$(kubectl --kubeconfig=kubeconfig get nodes --namespace mycv-test -o jsonpath="{.items[0].status.addresses[1].address}")
-          echo "fourth"
-          mvn -B verify -DBASE_URI=$NODE_PORT:$NODE_IP --file pom.xml
+          mvn -B verify -DBASE_URI=$NODE_IP:$NODE_PORT --file pom.xml
 
       - name: Deploy to Prod Namespace Kubernetes
         uses: WyriHaximus/github-action-helm3@v1.0.0
