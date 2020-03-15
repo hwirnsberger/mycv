@@ -16,8 +16,8 @@ public class PersonResourceIT {
 
     @BeforeAll
     public static void setup() {
+        RestAssured.baseURI = System.getProperty("BASE_URI") != null ? System.getProperty("BASE_URI") : "http://localhost";
         RestAssured.basePath = PersonResource.PERSONS_PATH;
-
         testPerson.name = "Herbert Wirnsberger";
         testPerson.birthDate = LocalDate.of(1985, 6, 16);
     }

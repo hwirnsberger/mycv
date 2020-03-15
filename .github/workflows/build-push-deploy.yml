@@ -57,8 +57,25 @@ jobs:
 
           docker push $IMAGE_ID:$VERSION
 
-      - name: Deploy to Kubernetes
+      - name: Deploy to Test Namespace Kubernetes
         uses: WyriHaximus/github-action-helm3@v1.0.0
         with:
-          exec: helm dependency update helm/mycv && helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID -n mycv mycv helm/mycv
+          exec: |
+            helm dependency update helm/mycv
+            helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID -n mycv-test mycv helm/mycv
           kubeconfig: '${{ secrets.KUBECONFIG }}'
+
+      - name: Test with Maven
+          run: |
+            echo ${{ secrets.KUBECONFIG }} > kubeconfig
+            export NODE_PORT=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[0].nodePort}" services mycv)
+            export NODE_IP=$(kubectl --kubeconfig=kubeconfig get nodes --namespace mycv-test -o jsonpath="{.items[0].status.addresses[1].address}")
+            mvn -B verify -DBASE_URI=$NODE_PORT:$NODE_IP --file pom.xml
+
+      - name: Deploy to Prod Namespace Kubernetes
+          uses: WyriHaximus/github-action-helm3@v1.0.0
+          with:
+            exec: |
+              helm dependency update helm/mycv
+              helm upgrade --install --wait --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID -n mycv mycv helm/mycv
+            kubeconfig: '${{ secrets.KUBECONFIG }}'
