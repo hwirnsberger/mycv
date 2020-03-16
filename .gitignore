@@ -38,4 +38,4 @@ release.properties
 .terraform/
 terraform/kubeconfig
 *.tfstate*
-
+/terraform/github_package_read.json

@@ -1,9 +1,0 @@
-{
-  "auths": {
-    "docker.pkg.github.com": {
-      "username": "hwirnsberger",
-      "password": "3e4e8743c9878a51601671999f155ece0ccd182f",
-      "auth": "aHdpcm5zYmVyZ2VyOjNlNGU4NzQzYzk4NzhhNTE2MDE2NzE5OTlmMTU1ZWNlMGNjZDE4MmY="
-    }
-  }
-}
