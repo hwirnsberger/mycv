@@ -7,6 +7,13 @@ It is a learning playground from writing software to deploy software in producti
 I want to implement a CI/CD pipeline where every commit will get deployed in production if tests are green.
 Also i want to play around with tools like github actions, kubernetes, etc.
 
+## Setup Kubernetes Cluster in Digital Ocean
+First download the doctl tool and login with it:\
+doctl auth init\
+Then a file should be generated: ~/.config/doctl/config.yaml\
+This file is used by terraform to authenticate with Digital Ocean.\
+A kubeconfig is written to terraform/kubernetes
+
 ## How to develop
 First you need to start a mongodb:
 
