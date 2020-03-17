@@ -73,7 +73,7 @@ jobs:
           export NODE_PORT_JACOCO=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[1].nodePort}" services mycv)
           mvn -B verify -DBASE_URI=http://$NODE_IP:$NODE_PORT -Djacoco.address=$NODE_IP -Djacoco.port=$NODE_PORT_JACOCO --file pom.xml
 
-      - name: Test with Maven
+      - name: SonarQube analyse
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD }}
