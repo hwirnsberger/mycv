@@ -1,3 +1,4 @@
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=hwirnsberger_mycv&metric=coverage)](https://sonarcloud.io/dashboard?id=hwirnsberger_mycv)
 
 # mycv
 Playground from DEV to OPS
