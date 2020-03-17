@@ -4,8 +4,12 @@ ENV AB_ENABLED=jmx_exporter
 COPY target/lib/* /deployments/lib/
 EXPOSE 8080
 
+ADD https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.5/org.jacoco.agent-0.8.5-runtime.jar /opt/jacoco/
+
 RUN adduser -G root --no-create-home --disabled-password 1001 \
-  && chown -R 1001 /deployments \
   && chmod -R "g+rwX" /deployments \
-  && chown -R 1001:root /deployments
+  && chown -R 1001:root /deployments \
+  && chmod -R "g+rwX" /opt/jacoco/ \
+  && chown -R 1001:root  /opt/jacoco/
+
 USER 1001
