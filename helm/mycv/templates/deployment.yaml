@@ -32,10 +32,19 @@ spec:
           env:
             - name: QUARKUS_MONGODB_CONNECTION_STRING
               value: "mongodb://mycv-mongodb:27017"
+            {{ if .Values.jacoco.enabled }}
+            - name: JAVA_OPTIONS
+              value: {{ .Values.jacoco.javaOptions }}
+            {{ end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+            {{ if .Values.jacoco.enabled }}
+            - name: jacoco
+              containerPort: 6300
+              protocol: TCP
+            {{ end }}
           livenessProbe:
             httpGet:
               path: /

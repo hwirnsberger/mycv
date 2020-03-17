@@ -77,3 +77,9 @@ mongodb:
   mongodbUsername: mycv
   mongodbPassword: mycv
   mongodbDatabase: mycv
+
+jacoco:
+  enabled: false
+  service:
+    port: 6300
+  javaOptions: "-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -javaagent:/opt/jacoco/org.jacoco.agent-0.8.5-runtime.jar=output=tcpserver,address=*"

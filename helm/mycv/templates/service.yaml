@@ -12,5 +12,11 @@ spec:
       protocol: TCP
       name: http
       nodePort: {{ .Values.service.nodePort }}
+    {{ if .Values.jacoco.enabled }}
+    - port: {{ .Values.jacoco.service.port }}
+      targetPort: jacoco
+      protocol: TCP
+      name: jacoco
+    {{ end }}
   selector:
     {{- include "mycv.selectorLabels" . | nindent 4 }}

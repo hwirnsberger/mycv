@@ -39,3 +39,6 @@ release.properties
 terraform/kubeconfig
 *.tfstate*
 /terraform/github_package_read.json
+
+# Custom
+/credentials

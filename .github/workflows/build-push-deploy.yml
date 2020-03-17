@@ -62,7 +62,7 @@ jobs:
         with:
           exec: |
             helm dependency update helm/mycv
-            helm upgrade --install --atomic --debug --set githubActionRun=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID,service.nodePort=31999 -n mycv-test mycv helm/mycv
+            helm upgrade --install --atomic --debug --set githubActionRun=jacoco.enabled=true,https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID,service.nodePort=31999 -n mycv-test mycv helm/mycv
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Test with Maven
@@ -70,7 +70,9 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
           export NODE_IP=$(kubectl --kubeconfig=kubeconfig get nodes --namespace mycv-test -o jsonpath="{.items[0].status.addresses[2].address}")
           export NODE_PORT=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[0].nodePort}" services mycv)
-          mvn -B verify -DBASE_URI=http://$NODE_IP:$NODE_PORT --file pom.xml
+          export NODE_PORT_JACOCO=$(kubectl --kubeconfig=kubeconfig get --namespace mycv-test -o jsonpath="{.spec.ports[1].nodePort}" services mycv)
+          mvn -B verify -DBASE_URI=http://$NODE_IP:$NODE_PORT -Djacoco.address=$NODE_IP -Djacoco.port=$NODE_PORT_JACOCO --file pom.xml
+          mvn -B sonar:sonar -Dsonar.login="${{ secrets.SONARCLOUD }}"
 
       - name: Deploy to Prod Namespace Kubernetes
         uses: WyriHaximus/github-action-helm3@v1.0.0
