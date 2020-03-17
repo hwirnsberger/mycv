@@ -14,7 +14,7 @@ variable "namespaces" {
 resource "digitalocean_kubernetes_cluster" "mycv" {
   name = "mycv"
   region = "fra1"
-  version = "1.16.6-do.0"
+  version = "1.16.6-do.2"
 
   node_pool {
     name = "mycv-nodepool"
